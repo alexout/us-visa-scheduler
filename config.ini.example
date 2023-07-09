@@ -26,8 +26,16 @@ PERSONAL_PUSHER_URL = https://yoursite.com/api/esender.php
 [CHROMEDRIVER]
 ; Details for the script to control Chrome
 LOCAL_USE = True
+; Run in headless mode, required to run in the cloud on Linux
+HEADLESS = False
+
 ; Optional: HUB_ADDRESS is mandatory only when LOCAL_USE = False
 HUB_ADDRESS = http://localhost:9515/wd/hub
+
+[BAN]
+; Option to disable ban detection, sometimes in embassy there may be no dates at all
+; this situation may be treated as ban
+BAN_DETECTION = True
 
 [TIME]
 ; Time between retries/checks for available dates (seconds)

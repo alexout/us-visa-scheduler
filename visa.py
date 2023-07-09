@@ -12,6 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
@@ -49,6 +50,10 @@ PERSONAL_SITE_PASS = config['NOTIFICATION']['PERSONAL_SITE_PASS']
 PUSH_TARGET_EMAIL = config['NOTIFICATION']['PUSH_TARGET_EMAIL']
 PERSONAL_PUSHER_URL = config['NOTIFICATION']['PERSONAL_PUSHER_URL']
 
+# Ban section
+
+BAN_DETECTION = config['BAN'].getboolean('BAN_DETECTION')
+
 # Time Section:
 SECONDS_IN_MINUTE = 60
 SECONDS_IN_HOUR = 60 * SECONDS_IN_MINUTE
@@ -66,6 +71,8 @@ BAN_COOLDOWN_TIME = config['TIME'].getfloat('BAN_COOLDOWN_TIME')
 # CHROMEDRIVER
 # Details for the script to control Chrome
 LOCAL_USE = config['CHROMEDRIVER'].getboolean('LOCAL_USE')
+# Run in headless mode
+HEADLESS = config['CHROMEDRIVER'].getboolean('HEADLESS')
 # Optional: HUB_ADDRESS is mandatory only when LOCAL_USE = False
 HUB_ADDRESS = config['CHROMEDRIVER']['HUB_ADDRESS']
 
@@ -147,6 +154,7 @@ def auto_action(label, find_by, el_type, action, value, sleep_time=0):
 
 def browser_login():
     # Bypass reCAPTCHA
+    logging.info("browser_login")
     driver.get(SIGN_IN_LINK)
     time.sleep(STEP_TIME)
     Wait(driver, 60).until(EC.presence_of_element_located((By.NAME, "commit")))
@@ -163,6 +171,7 @@ def browser_login():
 
 def browser_get_date():
     # Requesting to get the whole available dates
+    logging.info("browser_get_date")
     session = driver.get_cookie("_yatri_session")["value"]
     script = JS_SCRIPT % (DATE_URL, session)
     content = driver.execute_script(script)
@@ -245,8 +254,14 @@ if __name__ == "__main__":
 
     # Init Selenium driver
     if LOCAL_USE:
+        chrome_options = Options()
+        if HEADLESS:
+            chrome_options.add_argument("--headless")  # Ensure GUI is off
+            chrome_options.add_argument("--no-sandbox")
+            chrome_options.add_argument("--disable-dev-shm-usage")
+
         driver = webdriver.Chrome(service=Service(
-            ChromeDriverManager().install()))
+            ChromeDriverManager().install()), options=chrome_options)
     else:
         driver = webdriver.Remote(
             command_executor=HUB_ADDRESS, options=webdriver.ChromeOptions())
@@ -271,7 +286,7 @@ if __name__ == "__main__":
                 should_login = False
 
             dates = browser_get_date()
-            if not dates:
+            if not dates and BAN_DETECTION:
                 # Ban Situation
                 msg = f"List is empty, Probably banned!\n\tSleep for {BAN_COOLDOWN_TIME} hours!\n"
                 print(msg)

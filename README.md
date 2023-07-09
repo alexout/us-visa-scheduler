@@ -15,10 +15,7 @@ This project contains a Python script `visa.py` that runs on your local machine,
 2. Install Python v3 [for install goto: https://www.python.org/downloads/]
 3. Install the required python packages: Just run the bat file in the Microsoft Windows. Or run the below commands:
     ```
-    pip install requests==2.27.1
-    pip install selenium==4.2.0
-    pip install webdriver-manager==3.7.0
-    pip install sendgrid==6.9.7
+   pip install -r requirements.txt
     ```
 
 ### 2. Provide your appointment information
