@@ -303,8 +303,8 @@ if __name__ == "__main__":
             date = get_better_date(dates)
             logging.info(f"get_available_date(dates) = {date}")
             if date:
-                time = browser_get_time(date)
-                msg = "Found a better date. {date} {time}"
+                appt_time = browser_get_time(date)
+                msg = f"Found a better date. {date} {appt_time}"
                 print(msg)
                 logging.info(msg)
                 send_notification("FOUND", msg)
