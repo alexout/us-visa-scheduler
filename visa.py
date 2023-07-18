@@ -310,7 +310,7 @@ if __name__ == "__main__":
                 send_notification("FOUND", msg)
 
                 # final_notification_title, msg = browser_reschedule(date)
-                break
+                # break
 
             # No better date found, will retry
             msg = "No better date. Retrying..."
