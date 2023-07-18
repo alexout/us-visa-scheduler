@@ -303,12 +303,13 @@ if __name__ == "__main__":
             date = get_better_date(dates)
             logging.info(f"get_available_date(dates) = {date}")
             if date:
-                msg = "Found a better date. Attempting to reschedule automatically..."
+                time = browser_get_time(date)
+                msg = "Found a better date. {date} {time}"
                 print(msg)
                 logging.info(msg)
                 send_notification("FOUND", msg)
 
-                final_notification_title, msg = browser_reschedule(date)
+                # final_notification_title, msg = browser_reschedule(date)
                 break
 
             # No better date found, will retry
