@@ -172,9 +172,6 @@ def browser_login():
 def browser_get_date():
     # Requesting to get the whole available dates
     logging.info("browser_get_date")
-
-    # initialize the webdriver (Chrome, Firefox, etc.)
-    driver = webdriver.Firefox()
     session = driver.get_cookie("_yatri_session")["value"]
     script = JS_SCRIPT % (DATE_URL, session)
     content = driver.execute_script(script)
