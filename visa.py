@@ -172,10 +172,23 @@ def browser_login():
 def browser_get_date():
     # Requesting to get the whole available dates
     logging.info("browser_get_date")
+
+    # initialize the webdriver (Chrome, Firefox, etc.)
+    driver = webdriver.Firefox()
     session = driver.get_cookie("_yatri_session")["value"]
     script = JS_SCRIPT % (DATE_URL, session)
     content = driver.execute_script(script)
-    return json.loads(content)
+
+    # Check if content is None or empty
+    if content:
+        try:
+            return json.loads(content)
+        except json.JSONDecodeError as e:
+            logging.error(f'Unable to parse JSON: {content}, error: {e}')
+            return None
+    else:
+        logging.error("content is None or empty")
+        return None
 
 
 def browser_get_time(date):
