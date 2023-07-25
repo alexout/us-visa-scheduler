@@ -296,18 +296,19 @@ if __name__ == "__main__":
                 should_login = False
 
             dates = browser_get_date()
-            if not dates and BAN_DETECTION:
-                # Ban Situation
-                msg = f"List is empty, Probably banned!\n\tSleep for {BAN_COOLDOWN_TIME} hours!\n"
-                print(msg)
-                logging.info(msg)
-                send_notification("BAN", msg)
+            if dates is not None:
+                if not dates and BAN_DETECTION:
+                    # Ban Situation
+                    msg = f"List is empty, Probably banned!\n\tSleep for {BAN_COOLDOWN_TIME} hours!\n"
+                    print(msg)
+                    logging.info(msg)
+                    send_notification("BAN", msg)
 
-                driver.get(SIGN_OUT_LINK)
-                should_login = True
+                    driver.get(SIGN_OUT_LINK)
+                    should_login = True
 
-                time.sleep(BAN_COOLDOWN_TIME * SECONDS_IN_HOUR)
-                continue
+                    time.sleep(BAN_COOLDOWN_TIME * SECONDS_IN_HOUR)
+                    continue
 
             logging.info(f"Found earlist available days: {dates[:10]}")
             date = get_better_date(dates)
