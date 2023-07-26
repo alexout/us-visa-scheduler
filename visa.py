@@ -309,19 +309,19 @@ if __name__ == "__main__":
 
                     time.sleep(BAN_COOLDOWN_TIME * SECONDS_IN_HOUR)
                     continue
+            else:
+                logging.info(f"Found earlist available days: {dates[:10]}")
+                date = get_better_date(dates)
+                logging.info(f"get_available_date(dates) = {date}")
+                if date:
+                    appt_time = browser_get_time(date)
+                    msg = f"Found a better date. {date} {appt_time}"
+                    print(msg)
+                    logging.info(msg)
+                    send_notification("FOUND", msg)
 
-            logging.info(f"Found earlist available days: {dates[:10]}")
-            date = get_better_date(dates)
-            logging.info(f"get_available_date(dates) = {date}")
-            if date:
-                appt_time = browser_get_time(date)
-                msg = f"Found a better date. {date} {appt_time}"
-                print(msg)
-                logging.info(msg)
-                send_notification("FOUND", msg)
-
-                # final_notification_title, msg = browser_reschedule(date)
-                # break
+                    # final_notification_title, msg = browser_reschedule(date)
+                    # break
 
             # No better date found, will retry
             msg = "No better date. Retrying..."
